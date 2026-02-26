@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Complaint & Request Portal | Patel Traders</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
+        :root { --bhagwa: #ff9933; --bg-dark: #080a0f; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: #ffffff; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 153, 51, 0.2); border-radius: 28px; }
+        .m-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 16px; width: 100%; color: white; outline: none; transition: 0.3s; }
+        .m-input:focus { border-color: var(--bhagwa); background: rgba(255, 255, 255, 0.08); }
+        .btn-bhagwa { background: linear-gradient(135deg, #ff9933, #cc5500); color: white; font-weight: 800; text-transform: uppercase; border-radius: 16px; padding: 18px; width: 100%; cursor: pointer; border: none; box-shadow: 0 10px 20px rgba(255, 153, 51, 0.2); transition: 0.2s; }
+        
+        /* Disabled Button Style */
+        .btn-bhagwa:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        .active-tab { background: var(--bhagwa) !important; color: white !important; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.6s ease-out forwards; }
+        
+        /* 🎯 Animations for Welcome Screen */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(255, 153, 51, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0); } }
+    </style>
+</head>
+<body>
+
+    <div id="welcomeScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 text-center" style="background: #080a0f;">
+        <div class="mb-10" style="animation: fadeInDown 1s ease-out;">
+            <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-32 mx-auto rounded-[40px] shadow-[0_20px_50px_rgba(255,153,51,0.3)] border-2 border-[#ff9933]/50 mb-6" crossorigin="anonymous">
+            <h4 class="text-[#ff9933] font-black uppercase tracking-[5px] text-xs mb-2">Helpdesk Center</h4>
+            <h1 class="text-3xl md:text-5xl font-black text-white uppercase italic leading-tight mb-4">
+                Patel Traders <br> <span class="text-[#ff9933]">Support</span>
+            </h1>
+            <p class="text-white/40 text-[10px] font-bold tracking-[4px] uppercase">Complaint & Request Portal</p>
+        </div>
+        <button onclick="document.getElementById('welcomeScreen').style.display='none';" class="btn-bhagwa px-12 py-5 max-w-sm w-full" style="animation: pulse-glow 2s infinite; letter-spacing: 3px;">Access Support →</button>
+    </div>
+
+    <div class="text-center mb-8 animate-fade">
+        <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 mx-auto rounded-[30px] border-2 border-[#ff9933]/50 shadow-2xl mb-4" crossorigin="anonymous">
+        <h4 class="text-[#ff9933] font-black uppercase tracking-[5px] text-xs mb-2">Helpdesk Center</h4>
+        <h1 class="text-3xl md:text-4xl font-black text-white uppercase italic">Customer Support</h1>
+    </div>
+
+    <div id="mainBox" class="glass-card p-6 md:p-8 w-full max-w-lg animate-fade" style="animation-delay: 0.2s;">
+        <div class="flex gap-2 mb-8 bg-black/40 p-1 rounded-xl">
+            <button id="tabReg" onclick="switchTab('register')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab">New Request</button>
+            <button id="tabTrack" onclick="switchTab('track')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-white/40">Track Status</button>
+        </div>
+
+        <div id="formRegister" class="space-y-4">
+            <input type="text" id="cName" placeholder="Full Name *" class="m-input">
+            <input type="tel" id="cPhone" placeholder="10-Digit Mobile Number *" class="m-input" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            <input type="email" id="cEmail" placeholder="Email Address (Optional)" class="m-input">
+            <input type="text" id="cInvoice" placeholder="Invoice Number (Optional) e.g. PT-B-123" class="m-input">
+            
+            <select id="cType" class="m-input" style="color: #ffffff80;" onchange="this.style.color='white'">
+                <option value="" disabled selected>Select Request Type *</option>
+                <option value="Billing Issue">Invoice / Billing Issue</option>
+                <option value="Product Defect">Product Defect / Damage</option>
+                <option value="Update Phone Number">Update Registered Phone Number</option>
+                <option value="Update Email ID">Update Email Address</option>
+                <option value="Reset Password">Reset / Update Vault Password</option>
+                <option value="Service Issue">Staff / Service Issue</option>
+                <option value="Other">Other Request</option>
+            </select>
+            
+            <textarea id="cDesc" placeholder="Describe your request or problem briefly... *" class="m-input h-32 resize-none" maxlength="500"></textarea>
+            
+            <button id="btnSubmit" onclick="submitComplaint()" class="btn-bhagwa w-full mt-4">Submit Request</button>
+        </div>
+
+        <div id="formTrack" class="space-y-4" style="display: none;">
+            <p class="text-[10px] text-white/50 font-bold uppercase text-center mb-4 tracking-widest">Enter BOTH Mobile Number & SRN to check status</p>
+            
+            <input type="tel" id="tPhoneTrack" placeholder="10-Digit Mobile Number *" class="m-input text-center text-sm md:text-lg font-black tracking-[2px]" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            
+            <input type="text" id="tSrnTrack" placeholder="SRN (e.g. PT-C-123456) *" class="m-input text-center text-sm md:text-lg font-black tracking-[2px]" style="text-transform: uppercase;">
+            
+            <button id="btnTrack" onclick="trackComplaint()" class="btn-bhagwa w-full mt-2">Check Status</button>
+            
+            <div id="trackResults" class="mt-6 space-y-4"></div>
+        </div>
+    </div>
+
+    <div id="successBox" class="glass-card p-10 w-full max-w-lg text-center border-t-8 border-[#4ade80] animate-fade" style="display: none;">
+        <div class="w-24 h-24 bg-[#4ade80] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(74,222,128,0.4)]">
+            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
+        </div>
+        <h2 class="text-3xl font-black text-white mb-2">Request Submitted!</h2>
+        <p class="text-sm font-bold text-[#4ade80] uppercase tracking-widest mb-6">Successfully Sent</p>
+        
+        <div class="bg-black/50 p-6 rounded-3xl mb-6 border border-white/10">
+            <p class="text-[10px] text-white/40 uppercase font-black tracking-widest mb-2">Service Request Number (SRN)</p>
+            <p id="successTicketID" class="text-3xl font-black text-[#ff9933] tracking-[2px]">PT-C-000000</p>
+        </div>
+
+        <div class="bg-rose-500/10 border border-rose-500/20 p-4 rounded-xl mb-8 text-left">
+            <p class="text-[11px] text-white/80 font-bold leading-relaxed">
+                <span class="text-rose-400 font-black uppercase tracking-wider">Note:</span> It may take up to 60 to 90 days to update our database with your updated records, as data is manually verified.
+            </p>
+        </div>
+
+        <button onclick="goToTrack()" class="w-full py-4 bg-[#4ade80] hover:bg-[#22c55e] rounded-2xl text-white font-black text-sm uppercase tracking-widest transition-all">Track Status</button>
+    </div>
+
+    <div class="w-full max-w-lg mt-6 animate-fade" style="animation-delay: 0.4s;">
+        <button onclick="history.back()" class="w-full glass-card text-white font-black uppercase tracking-widest text-xs hover:bg-white/10 transition text-center py-4 cursor-pointer border-none">
+            ← Back to Portal
+        </button>
+    </div>
+
+    <script>
+        // ✅ Live Database URL (Kept exactly same)
+        const CMS_API_URL = "https://script.google.com/macros/s/AKfycbz4Hb7nd0grSl035BDTYurW8WBU_IJZJG_5U4qXpa07l71sAxJiDlPjUYlVq8uePZEC/exec"; 
+
+        function switchTab(tab) {
+            document.getElementById('formRegister').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('formTrack').style.display = tab === 'track' ? 'block' : 'none';
+            document.getElementById('tabReg').className = `flex-1 py-3 rounded-lg font-black uppercase text-[10px] ${tab === 'register' ? 'active-tab' : 'text-white/40'}`;
+            document.getElementById('tabTrack').className = `flex-1 py-3 rounded-lg font-black uppercase text-[10px] ${tab === 'track' ? 'active-tab' : 'text-white/40'}`;
+            document.getElementById('trackResults').innerHTML = '';
+        }
+
+        async function submitComplaint() {
+            const n = document.getElementById('cName').value.trim();
+            const ph = document.getElementById('cPhone').value.trim();
+            const email = document.getElementById('cEmail').value.trim() || "N/A";
+            const inv = document.getElementById('cInvoice').value.trim() || "N/A";
+            const type = document.getElementById('cType').value;
+            
+            let desc = document.getElementById('cDesc').value.trim();
+            desc = desc.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            if(!n || ph.length !== 10 || !type || !desc) {
+                return alert("⚠️ कृपया सभी जरूरी (*) जानकारी भरें।");
+            }
+
+            const btn = document.getElementById('btnSubmit');
+            btn.innerText = "Processing...";
+            btn.disabled = true; 
+
+            // 🛑 Anti-Spam Logic: PENDING Request Check
+            try {
+                const checkUrl = `${CMS_API_URL}?action=getComplaints&t=${Date.now()}`;
+                const checkRes = await fetch(checkUrl, { method: 'GET', redirect: 'follow' });
+                
+                if (checkRes.ok) {
+                    const checkText = await checkRes.text();
+                    if (!checkText.trim().startsWith("<")) {
+                        const checkAll = JSON.parse(checkText);
+                        const isPending = checkAll.some(c => String(c.phone).slice(-10) === ph && c.status === "PENDING");
+                        
+                        if (isPending) {
+                            alert("⚠️ Your request is in pending mode. Please contact Patel Traders.");
+                            btn.innerText = "Submit Request";
+                            btn.disabled = false;
+                            return; 
+                        }
+                    }
+                }
+            } catch (checkErr) {
+                console.error("Validation Check Error:", checkErr);
+            }
+
+            btn.innerText = "Submitting...";
+
+            const ticketId = "PT-C-" + Math.floor(100000 + Math.random() * 900000);
+            const dateStr = new Date().toLocaleString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+
+            const payload = {
+                action: "ADD_COMPLAINT",
+                ticket: ticketId, date: dateStr, name: n, phone: ph,
+                email: email, invoice: inv, type: type, description: desc, status: "PENDING"
+            };
+
+            try {
+                await fetch(CMS_API_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    body: JSON.stringify(payload) 
+                });
+                
+                document.getElementById('mainBox').style.display = 'none';
+                document.getElementById('successTicketID').innerText = ticketId;
+                document.getElementById('successBox').style.display = 'block';
+                
+                document.querySelectorAll('.m-input').forEach(i => i.value = '');
+            } catch (e) {
+                console.error("Post Error:", e);
+                alert("❌ सर्वर एरर! कृपया इंटरनेट कनेक्शन चेक करें और फिर प्रयास करें।");
+            }
+            btn.innerText = "Submit Request";
+            btn.disabled = false;
+        }
+
+        function goToTrack() {
+            document.getElementById('successBox').style.display = 'none';
+            document.getElementById('mainBox').style.display = 'block';
+            switchTab('track');
+        }
+
+        async function trackComplaint() {
+            // 🎯 UPDATE: Both fields are mandatory now
+            const ph = document.getElementById('tPhoneTrack').value.trim();
+            const srn = document.getElementById('tSrnTrack').value.trim();
+            
+            if(ph.length !== 10 || srn.length < 5) {
+                return alert("⚠️ कृपया सही 10-अंकों का मोबाइल नंबर और SRN (Service Request Number) दोनों डालें।");
+            }
+
+            const btn = document.getElementById('btnTrack');
+            const resBox = document.getElementById('trackResults');
+            btn.innerText = "Searching...";
+            btn.disabled = true;
+
+            try {
+                const fetchUrl = `${CMS_API_URL}?action=getComplaints&t=${Date.now()}`;
+                const res = await fetch(fetchUrl, { 
+                    method: 'GET',
+                    redirect: 'follow' 
+                });
+                
+                if (!res.ok) throw new Error("HTTP connection failed");
+
+                const textData = await res.text();
+                
+                if (textData.trim().startsWith("<")) {
+                    throw new Error("CORS or Permission Error: Script requires 'Anyone' access.");
+                }
+
+                const all = JSON.parse(textData);
+                
+                // 🎯 UPDATE: Must match BOTH Phone AND SRN
+                const myData = all.filter(c => 
+                    String(c.phone).slice(-10) === ph && 
+                    String(c.ticket).toUpperCase() === srn.toUpperCase()
+                ).reverse();
+
+                if(myData.length === 0) {
+                    resBox.innerHTML = "<p class='text-center text-rose-500 font-bold text-xs bg-rose-500/10 p-4 rounded-xl'>इन डिटेल्स के साथ कोई रिकॉर्ड नहीं मिला। कृपया नंबर और SRN चेक करें।</p>";
+                } else {
+                    let resultsHTML = myData.map(c => {
+                        let color = "rose"; 
+                        if(c.status === "RESOLVED") color = "emerald"; 
+                        else if(c.status === "IN PROGRESS") color = "blue";
+                        else if(c.status === "REJECTED") color = "rose";
+                        
+                        return `
+                        <div class="bg-black/30 border border-white/5 p-5 rounded-2xl relative overflow-hidden mb-4 shadow-lg">
+                            <div class="absolute left-0 top-0 w-1 h-full bg-${color}-500"></div>
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="bg-${color}-500/20 text-${color}-400 text-[9px] font-black px-3 py-1 rounded-md uppercase tracking-widest border border-${color}-500/20">${c.status}</span>
+                                <span class="text-[9px] text-white/30 font-bold">${c.date}</span>
+                            </div>
+                            
+                            <h3 class="text-[#ff9933] font-black text-xs uppercase tracking-widest mb-1">SRN: ${c.ticket}</h3>
+                            <h4 class="text-white font-bold text-sm mb-3">${c.type}</h4>
+                            
+                            <div class="bg-white/5 border border-white/10 p-3 rounded-xl mt-2">
+                                <p class="text-[8px] text-[#ff9933] uppercase font-black tracking-widest mb-1">Description / Details</p>
+                                <p class="text-white/80 text-xs italic leading-relaxed break-words">"${c.description}"</p>
+                            </div>
+
+                            ${(c.status === "REJECTED" && c.reason) ? `
+                            <div class="bg-rose-500/10 border border-rose-500/30 p-3 rounded-xl mt-3 animate-pulse">
+                                <p class="text-[8px] text-rose-400 uppercase font-black tracking-widest mb-1">Rejection Reason</p>
+                                <p class="text-rose-200 text-xs font-bold leading-relaxed break-words">${c.reason}</p>
+                            </div>` : ""}
+                        </div>`;
+                    }).join('');
+
+                    const now = new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
+                    resultsHTML += `<p class="text-[9px] text-white/30 text-center mt-6 font-bold uppercase tracking-widest">Last synced: Today at ${now}</p>`;
+                    
+                    resBox.innerHTML = resultsHTML;
+                }
+            } catch(e) {
+                console.error("Connection Error:", e);
+                resBox.innerHTML = "<p class='text-center text-rose-500 text-xs leading-relaxed bg-rose-500/10 p-4 rounded-xl'>❌ डेटाबेस कनेक्ट नहीं हुआ। <br><br><b>Admin Note:</b> कृपया सुनिश्चित करें कि Google Apps Script की 'Who has access' सेटिंग 'Anyone' पर सेट है।</p>";
+            }
+            btn.innerText = "Check Status";
+            btn.disabled = false;
+        }
+    </script>
+</body>
+</html>
